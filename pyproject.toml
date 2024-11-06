@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "autucripta"
+name = "bybit_trading_bot"
 version = "0.1.0"
 description = ""
 authors = ["md <marceldiomare@gmail.com>"]
