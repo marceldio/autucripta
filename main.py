@@ -1,4 +1,5 @@
 import time
+import asyncio
 from bot import (
     get_last_price,
     place_order,
@@ -6,7 +7,6 @@ from bot import (
     monitor_profit,
     send_telegram_message,
 )
-
 
 def main():
     symbol = "BTCUSDT"
@@ -16,11 +16,10 @@ def main():
     # Открываем позицию
     order_id = place_order(symbol, "Buy", qty)
     if order_id:
-        send_telegram_message(f"Открыта позиция: {symbol} по цене {entry_price}")
+        asyncio.run(send_telegram_message(f"Открыта позиция: {symbol} по цене {entry_price}"))
 
         # Начинаем отслеживание прибыли
         monitor_profit(entry_price, symbol, qty)
-
 
 if __name__ == "__main__":
     main()
