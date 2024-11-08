@@ -76,11 +76,7 @@ def close_position(symbol, side, qty):
         return None
 
 # Функция для отслеживания прибыли и закрытия позиции при достижении целевой прибыли
-def monitor_profit(entry_price, symbol, qty, target_profit_percent=0.1):
-    # Создаем новый цикл событий
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-
+def monitor_profit(entry_price, symbol, qty, loop, target_profit_percent=0.1):
     while True:
         current_price = get_last_price(symbol)
         if current_price is None:
@@ -92,15 +88,15 @@ def monitor_profit(entry_price, symbol, qty, target_profit_percent=0.1):
         if profit_percent >= target_profit_percent:
             close_position(symbol, "Sell", qty)
 
-            # Запускаем асинхронную задачу в новом цикле
+            # Запускаем асинхронную задачу в переданном цикле событий
             coroutine = send_telegram_message(
                 f"Позиция закрыта: {symbol} по цене {current_price} с прибылью {profit_percent:.2f}%"
             )
             loop.run_until_complete(coroutine)
-            loop.close()
             break
 
         time.sleep(60)  # Проверяем каждые 60 секунд
+
 
 # Запуск тестового сообщения и тестирования функций
 if __name__ == "__main__":

@@ -16,10 +16,12 @@ def main():
     # Открываем позицию
     order_id = place_order(symbol, "Buy", qty)
     if order_id:
-        asyncio.run(send_telegram_message(f"Открыта позиция: {symbol} по цене {entry_price}"))
+        # Создаем постоянный цикл событий
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(send_telegram_message(f"Открыта позиция: {symbol} по цене {entry_price}"))
 
-        # Начинаем отслеживание прибыли
-        monitor_profit(entry_price, symbol, qty)
+        # Начинаем отслеживание прибыли, используя один и тот же цикл событий
+        monitor_profit(entry_price, symbol, qty, loop)
 
 if __name__ == "__main__":
     main()
